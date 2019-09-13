@@ -8,5 +8,5 @@ target 'Pay_Check_LevCherniak' do
   use_frameworks!
 
   # Pods for Pay_Check_LevCherniak
-pod 'RealmSwift'
+  pod 'RealmSwift'
 end
