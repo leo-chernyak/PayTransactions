@@ -11,14 +11,12 @@ import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
-    var json: [[String:Any]]?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let path = Bundle.main.path(forResource: "transactions1", ofType: "json")
         let jsonData = try? NSData(contentsOfFile: path!, options: NSData.ReadingOptions.mappedIfSafe) as Data
-        json = try! JSONSerialization.jsonObject(with: jsonData!, options: []) as? [[String:Any]]
+        let json = try! JSONSerialization.jsonObject(with: jsonData!, options: []) as? [[String:Any]]
         clearRealm()
         saveRealmObject(json: json!)
         return true
@@ -33,26 +31,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 realm.add(Transaction(value: ["amount" : product["amount"] as? String, "currency" : product["currency"], "sku" : product["sku"], "currencyGBP" : product["currency"]]))
             }
         }
-        addTransactionsToProduct()
-        currencyConverter()
+        countProductTransactions()
+        convertCurrencyToGBP()
     }
     
-    func addTransactionsToProduct(){
+    
+    func countProductTransactions(){
         let realm = try! Realm()
-        let products = realm.objects(Product.self)
-        for product in products{
-            print(product.id)
-            let transactions = realm.objects(Transaction.self).filter("sku == %@", product.id)
-            let convertedList = transactions.reduce(List<Transaction>()) { (list, element) -> List<Transaction> in
-                list.append(element)
-                return list
-            }
-            try! realm.write {product.setValue(convertedList, forKey: "transactions")}
-            print(product.transactions.count)
+        for product in realm.objects(Product.self){
+            try! realm.write {product.setValue(realm.objects(Transaction.self).filter("sku == %@", product.id).count, forKey: "numOfTransactions")}
         }
     }
     
-    func currencyConverter() {
+    func convertCurrencyToGBP() {
         let realm = try! Realm()
         let transactionsList = realm.objects(Transaction.self)
         let path = Bundle.main.path(forResource: "rates2", ofType: "json")
@@ -64,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         for transactionObject in transactionsList{
             repeat{
                 var helpVar = transactionObject.currency
-                var valueCurrency = transactionObject.amount!
+                var valueCurrency = transactionObject.amount
                 for rate in jsonRates!{
                     if let rateFrom = rate["from"] as? String{fromCurrency = rateFrom}
                     if let rate = rate["rate"] as? String{rateCurrency = rate}

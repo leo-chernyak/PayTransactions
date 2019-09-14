@@ -13,11 +13,9 @@ class ProductTableViewCell: UITableViewCell {
     static let identifier = "ProductCell"
     
     func configure(with: Product){
-        let cellText = "Product = \(with.name ). Num of transactions  \(with.transactions.count )"
-        
+        let cellText = "Product = \(with.name ). \nNum of transactions  \(with.numOfTransactions )"
         self.textLabel?.text = cellText
         self.textLabel?.sizeToFit()
-        self.textLabel?.numberOfLines = 4
+        self.textLabel?.numberOfLines = 0
     }
-
 }

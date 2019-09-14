@@ -12,7 +12,7 @@ class TransactionTableViewCell: UITableViewCell {
     static let identifier = "TransactionCell"
     
     func configure(with: Transaction){
-        self.textLabel?.text = (with.sku)! + " " + with.currency! + " " + String(with.amount!) + " " + "GBP" + " " + String(with.amountGBP!)
+        self.textLabel?.text = "\(with.sku) - \(with.currency): \(with.amount); GBP: \(with.amountGBP)"
     }    
 }
     

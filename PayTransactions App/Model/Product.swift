@@ -13,8 +13,7 @@ import RealmSwift
 final class Product: Object {
     @objc dynamic var name: String = ""
     @objc dynamic var id: String = ""
-    let transaction = Transaction()
-    var transactions = List<Transaction>()
+    @objc dynamic var numOfTransactions: Int = 0
     
     override static func primaryKey() -> String? {
         return "id"

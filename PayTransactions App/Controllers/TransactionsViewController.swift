@@ -12,24 +12,29 @@ import RealmSwift
 class TransactionsViewController: UITableViewController {
     private var transactionsList: Results<Transaction>!
     private var notificationToken: NotificationToken? = nil
-    var selectedProduct: Product? {
+    var selectedProductId: String? {
         didSet{
             setupTransactionList()
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TransactionTableViewCell.identifier, for: indexPath) as! TransactionTableViewCell
         cell.configure(with: transactionsList[indexPath.row])
         return cell
     }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return transactionsList?.count ?? 1
     }
+    
     func setupTransactionList() {
-        transactionsList = selectedProduct?.transactions.sorted(byKeyPath: "amount", ascending: true)
+        let realm = try! Realm()
+        transactionsList = realm.objects(Transaction.self).filter("sku == %@", selectedProductId!)
         notificationToken = transactionsList?.observe { [weak self] (changes: RealmCollectionChange) in
             guard let tableView = self?.tableView else { return }
             switch changes {

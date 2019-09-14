@@ -35,7 +35,7 @@ final class ProductsViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! TransactionsViewController
         guard let indexPath = tableView.indexPathForSelectedRow else {return}
-        destinationVC.selectedProduct = products?[indexPath.row]
+        destinationVC.selectedProductId = products?[indexPath.row].id
         
         
     }

@@ -11,11 +11,9 @@ import RealmSwift
 
 
 final class Transaction: Object {
-   @objc dynamic var amount : String? = ""
-   @objc dynamic var currency : String? = ""
-   @objc dynamic var sku : String? = ""
-   @objc dynamic var currencyGBP : String? = ""
-   @objc dynamic var amountGBP : String? = ""
-   var parentCategory = LinkingObjects(fromType: Product.self, property: "transactions")
-    
+   @objc dynamic var amount : String = ""
+   @objc dynamic var currency : String = ""
+   @objc dynamic var sku : String = ""
+   @objc dynamic var currencyGBP : String = ""
+   @objc dynamic var amountGBP : String = ""
 }
